@@ -7,7 +7,7 @@ ts = """???.### 1,1,3
 ????.######..#####. 1,6,5
 ?###???????? 3,2,1
 """
-#ts = open('input_p12.txt').read()
+ts = open('input_p12.txt').read()
 pr = []
 for l in ts.split('\n')[:-1]:
     s, cfg = l.split(' ')
@@ -95,8 +95,9 @@ s, cfg
 S =0
 for i, (s, cfg) in enumerate(pr):
     cache = {}
-    S+=rec("?".join([s]*5), cfg+cfg+cfg+cfg+cfg)
-    print(i, S)
+    rtn = rec("?".join([s]*5), cfg+cfg+cfg+cfg+cfg)
+    print(i, rtn)
+    S+=rtn
 S
 #%%
 len(pr)

@@ -50,37 +50,66 @@ ts = """467..114..
 ...$.*....
 .664.598..
 """
-#ts = open('input_p3.txt').read()
+ts = open('input_p3.txt').read()
 symbols = set(ts)-set(".0123456789\n")
 arr = []
 for l in ts.split('\n')[:-1]:
     arr.append('.'+l +'.')
 arr.append('.'*len(arr[0]))
 
-def get_num_prefix(s):
+def get_num_prefix(s, reverse=False):
     num = ''
-    for c in s[::-1]:
+    for c in s:
         if not c.isnumeric():
             break
-        num = c+num
-    if num.isnumeric():
-        return num
+        num = num+c
+    if reverse:
+        return num[::-1]
     else:
-        return None
-
+        return num
+S = 0
 for i in range(len(arr)-1):
     for j in range(len(arr[0])-1):
         if arr[i][j]!='*':
             continue
         all_nums = []
         # search left numbers        
-        left_num = get_num_prefix(arr[i][j-1::-1])
-        if left_num:
-            all_nums.append(int(left_num))
-        all_nums.append(int(num))
-        
+        l_num = get_num_prefix(arr[i][j-1::-1], reverse=True)
+        if l_num:
+            all_nums.append(int(l_num))
+        # search right numbers
+        r_num = get_num_prefix(arr[i][j+1:])
+        if r_num:
+            all_nums.append(int(r_num))
+        # search upper left and upper right numbers
+        ul_num = get_num_prefix(arr[i-1][j-1::-1], reverse=True)
+        ur_num = get_num_prefix(arr[i-1][j+1:])
+        if arr[i-1][j].isnumeric():
+            all_nums.append(int(ul_num + arr[i-1][j] + ur_num))
+        else:
+            if ul_num:
+                all_nums.append(int(ul_num))
+            if ur_num:
+                all_nums.append(int(ur_num))
+        # search lower left and lower right numbers
+        ll_num = get_num_prefix(arr[i+1][j-1::-1], reverse=True)
+        lr_num = get_num_prefix(arr[i+1][j+1:])
+        if arr[i+1][j].isnumeric():
+            all_nums.append(int(ll_num + arr[i+1][j] + lr_num))
+        else:
+            if ll_num:
+                all_nums.append(int(ll_num))
+            if lr_num:
+                all_nums.append(int(lr_num))
+        if all_nums:
+            print(all_nums)
+            if len(all_nums)==2:
+                S+=all_nums[0]*all_nums[1]
+S
+#%%
+type(ll_num)
 
-
+get_num_prefix(arr[i+1][j-1::-1], reverse=True)
 #%%
 arr = []
 def c2i(c:str):
